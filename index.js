@@ -69,7 +69,7 @@ function removePreviewsGifs(){
 }
 
 function setParameters(data, amountOfScroll){
-	const apiUrl = "http://api.giphy.com/v1/gifs/search?";
+	const apiUrl = "https://api.giphy.com/v1/gifs/search?";
 	const apiKey = "P0lvvK6f6MnvvJr1uJjjznwmRsJPVQmE";
 	const apiSearch = encodeURIComponent(data).replace(/%20/g, "+");
 	const limitGif = 9 + 9 * amountOfScroll;
