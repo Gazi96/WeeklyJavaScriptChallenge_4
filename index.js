@@ -6,9 +6,18 @@ const input = document.getElementsByClassName("form__input")[0];
 const buttonSearch = document.getElementsByClassName("form__button")[0];
 let amountOfScroll = 0;
 
-buttonSearch.addEventListener("click", () => {
+getLocalStorage();
+
+buttonSearch.addEventListener("click", () =>{
 	validateData(input.value);
 });
+
+function getLocalStorage(){
+	const local = localStorage.getItem('input');
+	input.value = local;
+	
+	validateData(input.value);
+}
 
 function loadGifs(){
 	const container = document.getElementsByClassName("container");
@@ -39,7 +48,6 @@ function debounce(func, wait, immediate){
 var debounceInput = debounce(function() {
 	validateData(input.value);
 }, 500);
-
 input.addEventListener("input", debounceInput);
 
 function validateData(data){
@@ -51,10 +59,7 @@ function validateData(data){
 			throw "Wprowadzona wartość nie powinna być liczbą";
 		}
 		else{
-			amountOfScroll = 0;
-			removePreviewsGifs();
-			setParameters(data, 0);
-			messageError("");	
+			startLoadGifs(data);	
 		}
 	}
 	catch(err) {
@@ -62,8 +67,15 @@ function validateData(data){
 	}
 }
 
+function startLoadGifs(data){
+	amountOfScroll = 0;
+	removePreviewsGifs();
+	localStorage.setItem('input', data);
+	setParameters(data, 0);
+	messageError("");
+}
+
 function removePreviewsGifs(){
-	
 	const container = document.getElementsByClassName("container")[0];
 	container.textContent = "";
 }
@@ -104,7 +116,6 @@ function iterationData(data){
 
 function addSrc(src){
 	const videoElement = createVideoElement();
-	
 	const videoContainer = document.getElementsByClassName("container")[0];
 		
 	videoElement.children[0].src = src;
@@ -125,7 +136,6 @@ function createVideoElement(){
 }
 
 function addAtrribute(video, sourceMp4, sourceOpp){
-	
 	video.setAttribute("autoplay", "");
 	video.setAttribute("loop", "");
 	
@@ -137,7 +147,6 @@ function addAtrribute(video, sourceMp4, sourceOpp){
 }
   
 function addChild(video, sourceMp4, sourceOpp){
-	
 	video.appendChild(sourceMp4);
 	video.appendChild(sourceOpp);
 }
