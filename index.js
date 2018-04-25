@@ -16,7 +16,9 @@ function getLocalStorage(){
 	const local = localStorage.getItem('input');
 	input.value = local;
 	
-	validateData(input.value);
+	if(input.value.length > 0){
+		validateData(input.value);	
+	}
 }
 
 function loadGifs(){
