@@ -47,7 +47,6 @@ input:focus {
 
 .container{
 	display: flex;
-	justify-content: center;
 	width: 100%;
 	max-width: 1000px;
 	margin: auto;

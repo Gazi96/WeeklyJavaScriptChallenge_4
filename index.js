@@ -1,14 +1,29 @@
 "use strict";
 
+window.onscroll = loadGifs;
+
 const input = document.getElementsByClassName("form__input")[0];
-const message = document.getElementsByClassName("message")[0];
 const buttonSearch = document.getElementsByClassName("form__button")[0];
+let amountOfScroll = 0;
 
 buttonSearch.addEventListener("click", () => {
 	validateData(input.value);
 });
 
-function debounce(func, wait, immediate) {
+function loadGifs(){
+	const container = document.getElementsByClassName("container");
+	const containerHeight = container[0].offsetHeight;
+	
+	const yOffset = window.pageYOffset;
+	const y = yOffset + window.innerHeight;
+	
+	if(y >= containerHeight){
+		amountOfScroll ++;
+		setParameters(input.value, amountOfScroll);
+	}
+}
+
+function debounce(func, wait, immediate){
 	var timeout;
 	return function() {
 		var context = this, args = arguments;
@@ -36,13 +51,14 @@ function validateData(data){
 			throw "Wprowadzona wartość nie powinna być liczbą";
 		}
 		else{
+			amountOfScroll = 0;
 			removePreviewsGifs();
-			setParameters(data);
-			message.textContent = "";	
+			setParameters(data, 0);
+			messageError("");	
 		}
 	}
-	catch(err){
-		message.textContent = err;
+	catch(err) {
+		messageError(err);
 	}
 }
 
@@ -52,11 +68,11 @@ function removePreviewsGifs(){
 	container.textContent = "";
 }
 
-function setParameters(data){
+function setParameters(data, amountOfScroll){
 	const apiUrl = "http://api.giphy.com/v1/gifs/search?";
 	const apiKey = "P0lvvK6f6MnvvJr1uJjjznwmRsJPVQmE";
 	const apiSearch = encodeURIComponent(data).replace(/%20/g, "+");
-	const limitGif = 12;
+	const limitGif = 9 + 9 * amountOfScroll;
 		
 	const urlGifs = `${apiUrl}q=${apiSearch}&api_key=${apiKey}&limit=${limitGif}`;
 	
@@ -68,14 +84,21 @@ function fetchApi(urlGifs){
 	fetch(urlGifs)
 		.then(resp => resp.json())
 		.then(resp => {
-			iterationData(resp.data);
-	});
+			iterationData(resp.data, amountOfScroll);
+		})
+		.catch(error => messageError(error));
+}
+
+function messageError(err){
+	
+	const message = document.getElementsByClassName("message")[0];
+	message.textContent = err;
 }
 
 function iterationData(data){
-	
-	for(let value of data){
-		addSrc(value.images.original_mp4.mp4);
+
+	for(let i = 9 * amountOfScroll; i < data.length; i++){
+		addSrc(data[i].images.original_mp4.mp4);
 	}
 }
 
