@@ -118,12 +118,25 @@ function iterationData(data){
 
 function addSrc(src){
 	const videoElement = createVideoElement();
+	const linkElement = createLink();
+	
 	const videoContainer = document.getElementsByClassName("container")[0];
 		
 	videoElement.children[0].src = src;
 	videoElement.children[1].src = src;
+	linkElement.href=src;
 	
-	videoContainer.appendChild(videoElement);
+	linkElement.appendChild(videoElement);
+	videoContainer.appendChild(linkElement);
+}
+
+function createLink(){
+	
+	const link = document.createElement("a");
+	link.classList = "container__link";
+	link.target = "_blank";
+	
+	return link;
 }
 
 function createVideoElement(){
